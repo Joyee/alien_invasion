@@ -8,6 +8,8 @@ from ship import Ship
 
 import game_functions as gf
 
+from pygame.sprite import Group
+
 # 首先创建一个空的Pygame窗口，供后面用来绘制游戏
 # 元素，如飞船和外星人。我们还将让这个游戏响应用户输入、设置背景色以及加载飞船图像。
 def run_game():
@@ -18,18 +20,17 @@ def run_game():
   pygame.display.set_caption("Alien Invasion")
   
   # 创建一艘飞船
-  ship = Ship(screen)
+  ship = Ship(ai_settings, screen)
+  # 创建一个用于存储子弹的编组
+  bullets = Group()
   
   # 开始游戏的主循环
   while True:
     # 监视键盘和鼠标事件
-    gf.check_events()
-    
-    # 每次循环时都重绘屏幕
-    screen.fill(ai_settings.bg_color)
-    ship.blitme()
-    
-    # 让最近绘制的屏幕可见
-    pygame.display.flip() # 在这里，它在每次执行while循环时都绘制一个空屏幕，并擦去旧屏幕，使得只有新屏幕可见。
+    gf.check_events(ai_settings, screen, ship, bullets)
+    ship.update()
+    bullets.update()
+    gf.update_bullets(bullets)
+    gf.update_screen(ai_settings, screen, ship, bullets)
     
 run_game()
